@@ -1,6 +1,7 @@
 use anchor_lang::prelude::*;
 use crate::state::Portfolio;
 use crate::constants::*;
+use crate::errors::PortfolioError;
 
 #[derive(Accounts)]
 #[instruction(name: String)]
@@ -23,12 +24,12 @@ pub fn initialize_portfolio(ctx: Context<InitializePortfolio>, name: String) -> 
     
     // Validate that name contains only letters and numbers
     if !name.chars().all(|c| c.is_alphanumeric()) {
-        return err!(ProgramError::InvalidNameFormat);
+        return err!(PortfolioError::InvalidNameFormat);
     }
     
     // Validate name length
     if name.len() > NAME_LENGTH {
-        return err!(ProgramError::NameTooLong);
+        return err!(PortfolioError::NameTooLong);
     }
     
     // Initialize name field with zeros

@@ -8,11 +8,14 @@ skip-lint = false
 [programs.localnet]
 portfolio_program = "GMjxqNihJ5HrjDPDufCc7f7bmTxuMyP4G7xmC1H3XvnV"
 
+[programs.devnet]
+portfolio_program = "GMjxqNihJ5HrjDPDufCc7f7bmTxuMyP4G7xmC1H3XvnV"
+
 [registry]
 url = "https://api.apr.dev"
 
 [provider]
-cluster = "localnet"
+cluster = "devnet"
 wallet = "~/.config/solana/id.json"
 
 [scripts]
