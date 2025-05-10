@@ -47,12 +47,47 @@ async function main() {
     console.log("Portfolio name from account:", nameFromAccount);
     console.log("Wallet address:", portfolioAccount.walletAddress.toString());
     
-    // Update the portfolio with a new name
+    // Display and validate all other portfolio fields
+    console.log("Number of tokens:", portfolioAccount.nbTokens);
+    console.assert(portfolioAccount.nbTokens === 8, "nbTokens should be set to 8");
+    
+    console.log("Number of transactions:", portfolioAccount.nbTransactions);
+    console.assert(portfolioAccount.nbTransactions === 8, "nbTransactions should be set to 8");
+    
+    console.log("Total amount of tokens:", portfolioAccount.amountTotalTokens);
+    console.assert(portfolioAccount.amountTotalTokens === 8, "amountTotalTokens should be set to 8");
+    
+    console.log("Total value in stablecoin:", portfolioAccount.amountTotalValueStablecoin);
+    console.assert(portfolioAccount.amountTotalValueStablecoin === 8, "amountTotalValueStablecoin should be set to 8");
+    
+    console.log("Portfolio creation date:", portfolioAccount.datePortfolio);
+    console.assert(portfolioAccount.datePortfolio === 1789876754, "datePortfolio should be set to 1789876754");
+    
+    // Update the portfolio with new values
     const newName = "UpdatedDevnetPortfolio";
-    console.log("Updating portfolio with new name:", newName);
+    const newNbTokens = 15;
+    const newNbTransactions = 25;
+    const newAmountTotalTokens = 35;
+    const newAmountTotalValueStablecoin = 45;
+    const newDatePortfolio = 1789876754;
+    
+    console.log("Updating portfolio with new values:");
+    console.log("- Name:", newName);
+    console.log("- Number of tokens:", newNbTokens);
+    console.log("- Number of transactions:", newNbTransactions);
+    console.log("- Amount total tokens:", newAmountTotalTokens);
+    console.log("- Amount total value in stablecoin:", newAmountTotalValueStablecoin);
+    console.log("- Date portfolio:", newDatePortfolio);
     
     const updateTx = await program.methods
-      .updatePortfolio(newName)
+      .updatePortfolio(
+        newName,
+        newNbTokens,
+        newNbTransactions,
+        newAmountTotalTokens,
+        newAmountTotalValueStablecoin,
+        newDatePortfolio
+      )
       .accounts({
         portfolio: portfolioKeypair.publicKey,
         user: provider.wallet.publicKey,
@@ -71,13 +106,58 @@ async function main() {
       .toString("utf-8")
       .replace(/\0/g, "");
     
-    console.log("Updated portfolio name from account:", newNameFromAccount);
+    console.log("\nUpdated portfolio values from account:");
+    console.log("- Name:", newNameFromAccount);
+    console.log("- Number of tokens:", updatedPortfolioAccount.nbTokens);
+    console.log("- Number of transactions:", updatedPortfolioAccount.nbTransactions);
+    console.log("- Amount total tokens:", updatedPortfolioAccount.amountTotalTokens);
+    console.log("- Amount total value in stablecoin:", updatedPortfolioAccount.amountTotalValueStablecoin);
+    console.log("- Date portfolio:", updatedPortfolioAccount.datePortfolio);
     
-    // Verify that the name was updated
-    if (newNameFromAccount === newName) {
-      console.log("✅ Portfolio successfully updated!");
+    // Verify that all values were updated correctly
+    console.log("Number of tokens:", updatedPortfolioAccount.nbTokens);
+    console.log("Number of transactions:", updatedPortfolioAccount.nbTransactions);
+    console.log("Total amount of tokens:", updatedPortfolioAccount.amountTotalTokens);
+    console.log("Total value in stablecoin:", updatedPortfolioAccount.amountTotalValueStablecoin);
+    console.log("Portfolio creation date:", new Date(updatedPortfolioAccount.datePortfolio * 1000).toISOString());
+    
+    // Verify that all values were updated correctly
+    let allFieldsUpdated = true;
+    
+    if (newNameFromAccount !== newName) {
+      console.log("❌ Name update failed!");
+      allFieldsUpdated = false;
+    }
+    
+    if (updatedPortfolioAccount.nbTokens !== newNbTokens) {
+      console.log("❌ nbTokens update failed!");
+      allFieldsUpdated = false;
+    }
+    
+    if (updatedPortfolioAccount.nbTransactions !== newNbTransactions) {
+      console.log("❌ nbTransactions update failed!");
+      allFieldsUpdated = false;
+    }
+    
+    if (updatedPortfolioAccount.amountTotalTokens !== newAmountTotalTokens) {
+      console.log("❌ amountTotalTokens update failed!");
+      allFieldsUpdated = false;
+    }
+    
+    if (updatedPortfolioAccount.amountTotalValueStablecoin !== newAmountTotalValueStablecoin) {
+      console.log("❌ amountTotalValueStablecoin update failed!");
+      allFieldsUpdated = false;
+    }
+    
+    if (updatedPortfolioAccount.datePortfolio !== newDatePortfolio) {
+      console.log("❌ datePortfolio update failed!");
+      allFieldsUpdated = false;
+    }
+    
+    if (allFieldsUpdated) {
+      console.log("✅ Portfolio successfully updated with all new values!");
     } else {
-      console.log("❌ Portfolio update failed!");
+      console.log("❌ Some portfolio fields failed to update correctly!");
     }
     
   } catch (error) {

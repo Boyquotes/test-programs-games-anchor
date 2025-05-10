@@ -15,7 +15,15 @@ pub struct UpdatePortfolio<'info> {
     pub user: Signer<'info>,
 }
 
-pub fn update_portfolio(ctx: Context<UpdatePortfolio>, new_name: String) -> Result<()> {
+pub fn update_portfolio(
+    ctx: Context<UpdatePortfolio>, 
+    new_name: String,
+    nb_tokens: u32,
+    nb_transactions: u32,
+    amount_total_tokens: u32,
+    amount_total_value_stablecoin: u32,
+    date_portfolio: i32
+) -> Result<()> {
     let portfolio = &mut ctx.accounts.portfolio;
     
     // Validate that name contains only letters and numbers
@@ -37,6 +45,15 @@ pub fn update_portfolio(ctx: Context<UpdatePortfolio>, new_name: String) -> Resu
     // Update the portfolio name
     portfolio.name = name_bytes;
     
+    // Update additional fields with the provided values
+    portfolio.wallet_address = ctx.accounts.user.key();
+    portfolio.nb_tokens = nb_tokens;
+    portfolio.nb_transactions = nb_transactions;
+    portfolio.amount_total_tokens = amount_total_tokens;
+    portfolio.amount_total_value_stablecoin = amount_total_value_stablecoin;
+    portfolio.date_portfolio = date_portfolio;
+    
     msg!("Portfolio updated with new name: {}", new_name);
+    msg!("Portfolio token count: {}", portfolio.nb_tokens);
     Ok(())
 }
