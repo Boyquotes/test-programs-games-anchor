@@ -47,6 +47,6 @@ pub fn update_game(
     game.date_game = date_game;
     
     msg!("Game updated with new name: {}", new_name);
-    msg!("Game token count: {}", game.total_max_players);
+    msg!("Game total_max_players: {}", game.total_max_players);
     Ok(())
 }
