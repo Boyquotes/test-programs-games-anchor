@@ -42,7 +42,7 @@ pub fn update_portfolio(
     // Copy the name bytes to the fixed-size array
     name_bytes[..new_name.len()].copy_from_slice(new_name.as_bytes());
     
-    // Update the portfolio name
+    // Update the game name
     portfolio.name = name_bytes;
     
     // Update additional fields with the provided values
